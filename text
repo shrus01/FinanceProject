@@ -1,0 +1,11 @@
+@POST
+	@Path ("/placeOrder/{pid}/{emiPeriod}")										//To get form parameter ==> @FormParam
+	public Response confirmOrder(@PathParam("pid") int productId, @PathParam("emiPeriod") int emiPeriod) {
+		try {
+			int customerId = (int) session.getAttribute("customerId");
+			orderService.placeOrder(emiPeriod, customerId, productId);
+			return Response.status(Response.Status.OK).entity("Order Placed Successfully.").build();
+		} catch (InsufficientCreditLimitException e) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
+	}
